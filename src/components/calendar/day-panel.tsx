@@ -5,6 +5,12 @@ import { CATEGORY_META } from "@/lib/categories"
 import { formatLongDate } from "@/lib/calendar"
 import { emptyItem } from "@/lib/storage"
 import { CATEGORIES, type WorkItem } from "@/lib/types"
+import {
+  dayMark,
+  eventsOnDate,
+  SCHOOL_KIND_META,
+  schoolWeekNumber,
+} from "@/lib/school-calendar"
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
@@ -35,6 +41,9 @@ export function DayPanel({ date, items, onClose, onSave, onDelete }: DayPanelPro
   const [draft, setDraft] = useState<Draft | null>(null)
   const [titleError, setTitleError] = useState(false)
   const open = Boolean(date)
+  const official = date ? eventsOnDate(date) : []
+  const mark = date ? dayMark(date) : null
+  const week = date ? schoolWeekNumber(date) : null
 
   function startCreate() {
     if (!date) return
@@ -67,17 +76,37 @@ export function DayPanel({ date, items, onClose, onSave, onDelete }: DayPanelPro
                 {formatLongDate(date)}
               </DialogTitle>
               <DialogDescription>
-                {items.length === 0
-                  ? "這天還沒有工作安排，寫下一則會議、任務或出差即可。"
-                  : `這天共有 ${items.length} 項安排。`}
+                {week ? `校曆第 ${week} 週。` : ""}
+                {mark === "holiday" && "這天是學校假期。"}
+                {mark === "discretionary" && "這天是學校自決假期。"}
+                {mark === "teacherPD" && "教師專業發展日，學生不用上課。"}
+                {official.length === 0 && items.length === 0 && !mark
+                  ? "這天還沒有校務或工作安排。"
+                  : `可在下方寫下你當天的工作。`}
               </DialogDescription>
             </DialogHeader>
 
             <ScrollArea className="max-h-[min(28rem,55vh)] pr-3">
               <div className="flex flex-col gap-3">
+                {official.length > 0 && (
+                  <div className="flex flex-col gap-2">
+                    <p className="text-xs font-medium tracking-wide text-muted-foreground">校曆</p>
+                    {official.map((event) => (
+                      <article key={event.id} className="rounded-xl border bg-muted/30 p-3">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <Badge className={SCHOOL_KIND_META[event.kind].className} variant="secondary">
+                            {SCHOOL_KIND_META[event.kind].label}
+                          </Badge>
+                        </div>
+                        <h3 className="mt-2 font-medium">{event.title}</h3>
+                      </article>
+                    ))}
+                  </div>
+                )}
+
                 {items.length === 0 && !draft && (
                   <div className="rounded-xl border border-dashed bg-muted/40 px-4 py-8 text-center text-sm text-muted-foreground">
-                    點下方「新增安排」開始填寫。
+                    點下方「新增安排」寫下當天工作。校曆活動已列於上方，不會被覆蓋。
                   </div>
                 )}
 

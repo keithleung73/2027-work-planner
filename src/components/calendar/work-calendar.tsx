@@ -14,7 +14,8 @@ import { MonthGrid } from "@/components/calendar/month-grid"
 import { YearGrid } from "@/components/calendar/year-grid"
 import { DayPanel } from "@/components/calendar/day-panel"
 import { Sidebar } from "@/components/calendar/sidebar"
-import { Button } from "@/components/ui/button"
+import { CalendarLegend } from "@/components/calendar/legend"
+import { Button, buttonVariants } from "@/components/ui/button"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -29,8 +30,15 @@ import {
   ChevronRight,
   Download,
   Ellipsis,
+  FileText,
   Upload,
 } from "lucide-react"
+import {
+  SCHOOL_HANDBOOK_CODE,
+  SCHOOL_NAME,
+  SCHOOL_PDF_HREF,
+  SCHOOL_YEAR_LABEL,
+} from "@/lib/school-calendar"
 
 export function WorkCalendar() {
   const initial = defaultView()
@@ -111,15 +119,24 @@ export function WorkCalendar() {
     <div className="mx-auto flex w-full max-w-7xl flex-1 flex-col gap-6 p-4 pb-10 sm:p-6">
       <header className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <p className="text-sm font-medium tracking-[0.2em] text-primary">PLANNER</p>
+          <p className="text-sm font-medium tracking-[0.2em] text-primary">{SCHOOL_NAME}</p>
           <h1 className="font-heading mt-1 text-3xl font-semibold tracking-tight sm:text-4xl">
-            2026–2027 工作月曆
+            {SCHOOL_YEAR_LABEL}校曆
           </h1>
           <p className="mt-2 max-w-xl text-sm leading-6 text-muted-foreground">
-            點選任何一天寫下會議、任務或出差。資料只存在這台裝置的瀏覽器，不會上傳。
+            依{SCHOOL_HANDBOOK_CODE}標示假期、考試與活動。點選日期可對照校務，並寫下當天工作安排。
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-2">
+          <a
+            href={SCHOOL_PDF_HREF}
+            target="_blank"
+            rel="noreferrer"
+            className={buttonVariants({ variant: "outline" })}
+          >
+            <FileText data-icon="inline-start" />
+            官方校曆
+          </a>
           <Button type="button" variant="outline" onClick={goToday} disabled={!todayInRange}>
             <CalendarDays data-icon="inline-start" />
             今天
@@ -311,6 +328,8 @@ export function WorkCalendar() {
           onSelectDate={openDate}
         />
       </div>
+
+      <CalendarLegend />
 
       <DayPanel
         key={selectedDate ?? "closed"}

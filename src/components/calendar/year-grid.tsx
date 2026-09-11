@@ -1,6 +1,7 @@
 "use client"
 
 import { getMonthCells, MONTHS, todayKey } from "@/lib/calendar"
+import { dayMark } from "@/lib/school-calendar"
 import { cn } from "@/lib/utils"
 import type { WorkItem } from "@/lib/types"
 
@@ -25,7 +26,7 @@ export function YearGrid({
     <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
       {MONTHS.map((label, month) => {
         const cells = getMonthCells(year, month)
-        const count = cells.filter((cell) => cell.inMonth && (byDate.get(cell.key)?.length ?? 0) > 0).length
+        const holidayCount = cells.filter((cell) => cell.inMonth && dayMark(cell.key) === "holiday").length
 
         return (
           <section
@@ -41,7 +42,7 @@ export function YearGrid({
                 {label}
               </button>
               <span className="text-xs text-muted-foreground">
-                {count > 0 ? `${count} 天有安排` : "尚未安排"}
+                {holidayCount > 0 ? `${holidayCount} 天假期` : "校曆活動見月曆"}
               </span>
             </div>
             <div className="grid grid-cols-7 gap-y-1 text-center text-[10px] text-muted-foreground">
@@ -52,6 +53,7 @@ export function YearGrid({
             <div className="mt-1 grid grid-cols-7 gap-y-1">
               {cells.map((cell) => {
                 const hasItems = (byDate.get(cell.key)?.length ?? 0) > 0
+                const mark = dayMark(cell.key)
                 const isToday = cell.key === today
                 const isSelected = cell.key === selectedDate
                 return (
@@ -64,6 +66,9 @@ export function YearGrid({
                       "mx-auto flex size-7 items-center justify-center rounded-full text-xs",
                       !cell.inMonth && "opacity-0",
                       cell.inMonth && "hover:bg-accent",
+                      mark === "holiday" && cell.inMonth && "text-red-600 font-semibold",
+                      mark === "discretionary" && cell.inMonth && "text-rose-600 font-semibold",
+                      mark === "teacherPD" && cell.inMonth && "bg-zinc-300",
                       hasItems && cell.inMonth && "font-semibold text-primary",
                       isToday && "bg-primary text-primary-foreground hover:bg-primary",
                       isSelected && !isToday && "ring-2 ring-primary",
