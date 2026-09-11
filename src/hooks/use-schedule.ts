@@ -1,6 +1,6 @@
 "use client"
 
-import { useCallback, useEffect, useMemo, useSyncExternalStore } from "react"
+import { useCallback, useEffect, useMemo, useState } from "react"
 import { compareItemsByTime } from "@/lib/calendar"
 import {
   createId,
@@ -11,101 +11,83 @@ import {
 } from "@/lib/storage"
 import type { WorkItem } from "@/lib/types"
 
-type StoreState = {
+type ScheduleState = {
   items: WorkItem[]
   error: string | null
   saveError: string | null
-  ready: boolean
 }
 
-const emptyState: StoreState = {
+const emptyState: ScheduleState = {
   items: [],
   error: null,
   saveError: null,
-  ready: false,
-}
-
-let state: StoreState = emptyState
-const listeners = new Set<() => void>()
-
-function emit() {
-  for (const listener of listeners) listener()
-}
-
-function subscribe(listener: () => void) {
-  listeners.add(listener)
-  return () => listeners.delete(listener)
-}
-
-function getSnapshot() {
-  return state
-}
-
-function getServerSnapshot() {
-  return emptyState
-}
-
-function hydrate() {
-  if (state.ready || typeof window === "undefined") return
-  const loaded = loadSchedule()
-  state = {
-    items: loaded.items,
-    error: loaded.error,
-    saveError: null,
-    ready: true,
-  }
-  emit()
-}
-
-function persist(items: WorkItem[], error: string | null = null) {
-  let saveError: string | null = null
-  try {
-    saveSchedule(items)
-  } catch {
-    saveError = "無法寫入本機儲存。瀏覽器可能停用了 localStorage，或空間已滿。"
-  }
-  state = { items, error, saveError, ready: true }
-  emit()
 }
 
 export function useSchedule() {
-  const snapshot = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot)
+  const [state, setState] = useState<ScheduleState>(emptyState)
+  const [ready, setReady] = useState(false)
 
   useEffect(() => {
-    hydrate()
+    const loaded = loadSchedule()
+    // Hydrate from localStorage after mount; this is browser-only state.
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- localStorage is an external system
+    setState({
+      items: loaded.items,
+      error: loaded.error,
+      saveError: null,
+    })
+    setReady(true)
   }, [])
 
-  const upsert = useCallback((item: Omit<WorkItem, "id"> & { id?: string }) => {
-    const current = state.items
-    const id = item.id ?? createId()
-    const nextItem: WorkItem = { ...item, id, title: item.title.trim() }
-    persist(
-      current.some((existing) => existing.id === id)
-        ? current.map((existing) => (existing.id === id ? nextItem : existing))
-        : [...current, nextItem],
-    )
-    return id
+  const persist = useCallback((items: WorkItem[], error: string | null = null) => {
+    let saveError: string | null = null
+    try {
+      saveSchedule(items)
+    } catch {
+      saveError = "無法寫入本機儲存。瀏覽器可能停用了 localStorage，或空間已滿。"
+    }
+    setState({ items, error, saveError })
   }, [])
 
-  const remove = useCallback((id: string) => {
-    persist(state.items.filter((item) => item.id !== id))
-  }, [])
+  const upsert = useCallback(
+    (item: Omit<WorkItem, "id"> & { id?: string }) => {
+      const id = item.id ?? createId()
+      const nextItem: WorkItem = { ...item, id, title: item.title.trim() }
+      persist(
+        state.items.some((existing) => existing.id === id)
+          ? state.items.map((existing) => (existing.id === id ? nextItem : existing))
+          : [...state.items, nextItem],
+      )
+      return id
+    },
+    [persist, state.items],
+  )
+
+  const remove = useCallback(
+    (id: string) => {
+      persist(state.items.filter((item) => item.id !== id))
+    },
+    [persist, state.items],
+  )
 
   const clearAll = useCallback(() => {
     persist([], null)
-  }, [])
+  }, [persist])
 
-  const importJson = useCallback((raw: string) => {
-    const next = parsePayload(raw)
-    persist(next, null)
-    return next.length
-  }, [])
+  const importJson = useCallback(
+    (raw: string) => {
+      const next = parsePayload(raw)
+      persist(next, null)
+      return next.length
+    },
+    [persist],
+  )
 
-  const exportJson = useCallback(() => serializeSchedule(state.items), [])
+  const exportJson = useCallback(() => serializeSchedule(state.items), [state.items])
 
   const byDate = useMemo(() => {
     const map = new Map<string, WorkItem[]>()
-    for (const item of snapshot.items) {
+    for (const item of state.items) {
       const list = map.get(item.date) ?? []
       list.push(item)
       map.set(item.date, list)
@@ -114,21 +96,21 @@ export function useSchedule() {
       list.sort(compareItemsByTime)
     }
     return map
-  }, [snapshot.items])
+  }, [state.items])
 
   const sorted = useMemo(() => {
-    return [...snapshot.items].sort((a, b) => {
+    return [...state.items].sort((a, b) => {
       if (a.date !== b.date) return a.date.localeCompare(b.date)
       return compareItemsByTime(a, b)
     })
-  }, [snapshot.items])
+  }, [state.items])
 
   return {
     items: sorted,
     byDate,
-    ready: snapshot.ready,
-    error: snapshot.error,
-    saveError: snapshot.saveError,
+    ready,
+    error: state.error,
+    saveError: state.saveError,
     upsert,
     remove,
     clearAll,
