@@ -22,7 +22,7 @@ export function YearGrid({
   const today = todayKey()
 
   return (
-    <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
       {MONTHS.map((label, month) => {
         const cells = getMonthCells(year, month)
         const count = cells.filter((cell) => cell.inMonth && (byDate.get(cell.key)?.length ?? 0) > 0).length
