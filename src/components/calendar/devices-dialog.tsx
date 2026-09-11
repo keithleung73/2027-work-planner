@@ -54,11 +54,21 @@ export function DevicesDialog({ open, onOpenChange, items }: DevicesDialogProps)
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-lg">
         <DialogHeader>
-          <DialogTitle className="font-heading text-xl">在其他裝置查看</DialogTitle>
+          <DialogTitle className="font-heading text-xl">用網頁就適合，不必做獨立 App</DialogTitle>
           <DialogDescription>
-            官方校曆寫在網站裡，上網之後手機、平板、電腦用同一個網址就能看。你自己寫的工作安排則存在每個瀏覽器，需要同步一次。
+            這是校曆網站，電腦、手機用瀏覽器打開即可。同事分享一個網址就能看官方假期與考試，不必到 App Store 下載。
           </DialogDescription>
         </DialogHeader>
+
+        <div className="rounded-xl border bg-muted/40 px-3 py-3 text-sm leading-6">
+          <p className="font-medium">為何用網頁</p>
+          <ul className="mt-1 list-disc pl-4 text-muted-foreground">
+            <li>一份網址，電腦同手機都用到，唔使分開做 iPhone / Android App</li>
+            <li>官方校曆更新一次，所有裝置即時見到</li>
+            <li>唔使審批上架，亦唔使佔用手機安裝空間</li>
+            <li>想似 App：用瀏覽器打開後「加到主畫面」即可</li>
+          </ul>
+        </div>
 
         <ol className="flex list-decimal flex-col gap-4 pl-4 text-sm leading-6">
           <li>
@@ -81,7 +91,7 @@ export function DevicesDialog({ open, onOpenChange, items }: DevicesDialogProps)
           <li>
             <p className="font-medium">用同一個網址開所有裝置</p>
             <p className="text-muted-foreground">
-              手機用 Safari / Chrome 打開部署後的網址，可加到主畫面，像 App 一樣用。官方假期、考試、活動會自動顯示。
+              iPhone：Safari 打開網址 → 分享 → 加入主畫面。Android：Chrome 打開 → 選單 → 加到主畫面。之後圖示會像 App 一樣。官方假期、考試、活動會自動顯示。
             </p>
             <Button
               type="button"

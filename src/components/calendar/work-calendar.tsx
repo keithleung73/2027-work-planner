@@ -157,7 +157,7 @@ export function WorkCalendar() {
             {SCHOOL_YEAR_LABEL}校曆
           </h1>
           <p className="mt-2 max-w-xl text-sm leading-6 text-muted-foreground">
-            依{SCHOOL_HANDBOOK_CODE}標示假期、考試與活動。點選日期可對照校務，並寫下當天工作安排。
+            依{SCHOOL_HANDBOOK_CODE}標示假期、考試與活動。這是網頁，手機同電腦用瀏覽器打開即可；點日期可對照校務並寫下工作。
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-2">
