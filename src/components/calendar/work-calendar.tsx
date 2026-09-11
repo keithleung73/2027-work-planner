@@ -1,6 +1,6 @@
 "use client"
 
-import { useMemo, useRef, useState } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
 import {
   canShiftMonth,
   defaultView,
@@ -14,6 +14,7 @@ import { MonthGrid } from "@/components/calendar/month-grid"
 import { YearGrid } from "@/components/calendar/year-grid"
 import { DayPanel } from "@/components/calendar/day-panel"
 import { Sidebar } from "@/components/calendar/sidebar"
+import { DevicesDialog } from "@/components/calendar/devices-dialog"
 import { CalendarLegend } from "@/components/calendar/legend"
 import { Button, buttonVariants } from "@/components/ui/button"
 import {
@@ -31,6 +32,7 @@ import {
   Download,
   Ellipsis,
   FileText,
+  Smartphone,
   Upload,
 } from "lucide-react"
 import {
@@ -39,6 +41,7 @@ import {
   SCHOOL_PDF_HREF,
   SCHOOL_YEAR_LABEL,
 } from "@/lib/school-calendar"
+import { clearShareHash, decodeSharePayload, shareHashFromLocation } from "@/lib/share"
 
 export function WorkCalendar() {
   const initial = defaultView()
@@ -48,7 +51,9 @@ export function WorkCalendar() {
   const [selectedDate, setSelectedDate] = useState<string | null>(null)
   const [query, setQuery] = useState("")
   const [importMessage, setImportMessage] = useState<string | null>(null)
+  const [devicesOpen, setDevicesOpen] = useState(false)
   const fileRef = useRef<HTMLInputElement>(null)
+  const consumedShare = useRef(false)
 
   const schedule = useSchedule()
   const today = todayKey()
@@ -106,6 +111,34 @@ export function WorkCalendar() {
     }
   }
 
+  const importJson = schedule.importJson
+  const scheduleReady = schedule.ready
+
+  useEffect(() => {
+    if (!scheduleReady || consumedShare.current) return
+    const encoded = shareHashFromLocation()
+    if (!encoded) return
+    consumedShare.current = true
+    void (async () => {
+      try {
+        const items = await decodeSharePayload(encoded)
+        const ok = window.confirm(
+          `這個連結有 ${items.length} 項個人工作安排。載入到這部裝置會覆蓋現有備註，校曆活動不受影響。繼續？`,
+        )
+        if (!ok) {
+          clearShareHash()
+          return
+        }
+        const count = importJson(JSON.stringify({ version: 1, items }))
+        clearShareHash()
+        setImportMessage(`已從其他裝置載入 ${count} 項工作安排。`)
+      } catch {
+        clearShareHash()
+        setImportMessage("同步連結無效或已損壞。")
+      }
+    })()
+  }, [scheduleReady, importJson])
+
   if (!schedule.ready) {
     return (
       <div className="mx-auto flex w-full max-w-7xl flex-1 flex-col gap-4 p-4">
@@ -137,6 +170,10 @@ export function WorkCalendar() {
             <FileText data-icon="inline-start" />
             官方校曆
           </a>
+          <Button type="button" variant="outline" onClick={() => setDevicesOpen(true)}>
+            <Smartphone data-icon="inline-start" />
+            其他裝置
+          </Button>
           <Button type="button" variant="outline" onClick={goToday} disabled={!todayInRange}>
             <CalendarDays data-icon="inline-start" />
             今天
@@ -338,6 +375,11 @@ export function WorkCalendar() {
         onClose={() => setSelectedDate(null)}
         onSave={schedule.upsert}
         onDelete={schedule.remove}
+      />
+      <DevicesDialog
+        open={devicesOpen}
+        onOpenChange={setDevicesOpen}
+        items={schedule.items}
       />
     </div>
   )

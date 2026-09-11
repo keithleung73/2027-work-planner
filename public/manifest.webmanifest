@@ -1,0 +1,16 @@
+{
+  "name": "萬鈞伯裘書院 2026–2027 校曆",
+  "short_name": "伯裘校曆",
+  "lang": "zh-Hant",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f7f3ea",
+  "theme_color": "#9a4a2a",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "48x48",
+      "type": "image/x-icon"
+    }
+  ]
+}

@@ -17,6 +17,12 @@ const serif = Noto_Serif_TC({
 export const metadata: Metadata = {
   title: "萬鈞伯裘書院 2026–2027 校曆",
   description: "依校務手冊26-27-007顯示萬鈞伯裘書院校曆，並可在每天填寫個人工作安排。",
+  manifest: "/manifest.webmanifest",
+  appleWebApp: {
+    capable: true,
+    title: "伯裘校曆",
+    statusBarStyle: "default",
+  },
 }
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
