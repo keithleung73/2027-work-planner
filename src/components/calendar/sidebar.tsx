@@ -12,7 +12,6 @@ import {
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { ScrollArea } from "@/components/ui/scroll-area"
 import type { WorkItem } from "@/lib/types"
 import { Search } from "lucide-react"
 
@@ -112,8 +111,7 @@ export function Sidebar({
                 這個月沒有載入校曆活動。學年校曆由 2026 年 9 月至 2027 年 8 月。
               </p>
             ) : (
-              <ScrollArea className="mt-1 max-h-72">
-                <ul className="mt-3 flex flex-col gap-2">
+              <ul className="mt-3 flex max-h-72 flex-col gap-2 overflow-y-auto pr-1">
                   {school.map((event) => (
                     <li key={event.id}>
                       <Button
@@ -140,7 +138,6 @@ export function Sidebar({
                     </li>
                   ))}
                 </ul>
-              </ScrollArea>
             )}
           </section>
 
@@ -154,9 +151,37 @@ export function Sidebar({
                 這個月還沒有個人工作。點日期即可加會議或待辦。
               </p>
             ) : (
-              <ScrollArea className="mt-1 max-h-56">
-                <ItemList items={monthItems} today={today} onSelectDate={onSelectDate} />
-              </ScrollArea>
+              <ul className="mt-3 flex max-h-56 flex-col gap-2 overflow-y-auto pr-1">
+                {monthItems.map((item) => {
+                  const parsed = parseDateKey(item.date)
+                  return (
+                    <li key={item.id}>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        className="h-auto w-full items-start justify-start px-2 py-2 text-left whitespace-normal"
+                        onClick={() => onSelectDate(item.date)}
+                      >
+                        <span className="flex w-full min-w-0 flex-col gap-1">
+                          <span className="flex items-center gap-2 text-xs text-muted-foreground">
+                            <span>
+                              {parsed.month + 1}/{parsed.day}
+                              {item.date === today ? " · 今天" : ""}
+                            </span>
+                            <Badge className={CATEGORY_META[item.category].className} variant="secondary">
+                              {CATEGORY_META[item.category].label}
+                            </Badge>
+                          </span>
+                          <span className="truncate text-sm font-medium">
+                            {item.startTime ? `${item.startTime} ` : ""}
+                            {item.title}
+                          </span>
+                        </span>
+                      </Button>
+                    </li>
+                  )
+                })}
+              </ul>
             )}
           </section>
         </>
