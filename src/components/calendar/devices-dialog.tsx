@@ -9,7 +9,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
-import { buildShareUrl, isLocalPreview, siteUrl } from "@/lib/share"
+import { SCHOOL_SITE_URL } from "@/lib/school-calendar"
+import { buildShareUrl, isLocalPreview } from "@/lib/share"
 import type { WorkItem } from "@/lib/types"
 import { Check, Copy, Smartphone } from "lucide-react"
 
@@ -54,53 +55,44 @@ export function DevicesDialog({ open, onOpenChange, items }: DevicesDialogProps)
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-lg">
         <DialogHeader>
-          <DialogTitle className="font-heading text-xl">用網頁就適合，不必做獨立 App</DialogTitle>
+          <DialogTitle className="font-heading text-xl">一份網址，所有裝置都一樣</DialogTitle>
           <DialogDescription>
-            這是校曆網站，電腦、手機用瀏覽器打開即可。同事分享一個網址就能看官方假期與考試，不必到 App Store 下載。
+            正式網站是 {SCHOOL_SITE_URL}。電腦、手機、同事都開這一個，官方校曆更新後重新整理即可看到。
           </DialogDescription>
         </DialogHeader>
 
         <div className="rounded-xl border bg-muted/40 px-3 py-3 text-sm leading-6">
-          <p className="font-medium">為何用網頁</p>
+          <p className="font-medium">會自動同步的</p>
           <ul className="mt-1 list-disc pl-4 text-muted-foreground">
-            <li>一份網址，電腦同手機都用到，唔使分開做 iPhone / Android App</li>
-            <li>官方校曆更新一次，所有裝置即時見到</li>
-            <li>唔使審批上架，亦唔使佔用手機安裝空間</li>
-            <li>想似 App：用瀏覽器打開後「加到主畫面」即可</li>
+            <li>學校假期、考試、交流團、校務活動</li>
+            <li>圖例、月曆與年曆</li>
+            <li>官方 PDF</li>
           </ul>
+          <p className="mt-3 font-medium">不會自動同步的</p>
+          <p className="mt-1 text-muted-foreground">
+            你在某一裝置「新增安排」寫下的會議或備註，只存在該瀏覽器。要用「複製同步連結」或「匯出／匯入」帶到另一部裝置。
+          </p>
         </div>
 
         <ol className="flex list-decimal flex-col gap-4 pl-4 text-sm leading-6">
           <li>
-            <p className="font-medium">把網站放到互聯網（一次就可以）</p>
+            <p className="font-medium">所有裝置都開正式網址</p>
             <p className="text-muted-foreground">
-              在 Cursor 先建立 GitHub 倉庫，然後到{" "}
-              <a href="https://vercel.com/new" target="_blank" rel="noreferrer">
-                vercel.com/new
-              </a>{" "}
-              用 GitHub 登入，匯入這個專案並免費部署。完成後會得到類似{" "}
-              <code className="rounded bg-muted px-1">https://你的專案.vercel.app</code>{" "}
-              的網址。
+              不要用 127.0.0.1 或 Cursor 預覽給其他人。iPhone：Safari 打開後分享 → 加入主畫面。Android：Chrome 選單 → 加到主畫面。
             </p>
             {local && (
               <p className="mt-2 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-amber-950">
-                現在這個預覽只在這次雲端工作階段有效，手機打不開 127.0.0.1。部署到 Vercel 之後，任何裝置都能開。
+                你現在開的是預覽，只在這部電腦有效。請改開正式網址。
               </p>
             )}
-          </li>
-          <li>
-            <p className="font-medium">用同一個網址開所有裝置</p>
-            <p className="text-muted-foreground">
-              iPhone：Safari 打開網址 → 分享 → 加入主畫面。Android：Chrome 打開 → 選單 → 加到主畫面。之後圖示會像 App 一樣。官方假期、考試、活動會自動顯示。
-            </p>
             <Button
               type="button"
               variant="outline"
               className="mt-2"
-              onClick={() => void copyText(siteUrl(), "page")}
+              onClick={() => void copyText(SCHOOL_SITE_URL, "page")}
             >
               {copiedPage ? <Check data-icon="inline-start" /> : <Copy data-icon="inline-start" />}
-              {copiedPage ? "已複製網址" : "複製目前網址"}
+              {copiedPage ? "已複製正式網址" : "複製正式網址"}
             </Button>
           </li>
           <li>

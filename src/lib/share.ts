@@ -1,3 +1,4 @@
+import { SCHOOL_SITE_URL } from "@/lib/school-calendar"
 import { parsePayload, serializeSchedule } from "@/lib/storage"
 import type { WorkItem } from "@/lib/types"
 
@@ -66,14 +67,13 @@ export function shareHashFromLocation() {
 
 export async function buildShareUrl(items: WorkItem[]) {
   const encoded = await encodeSharePayload(items)
-  const url = new URL(window.location.href)
+  const url = new URL(siteUrl())
   url.hash = `${SHARE_PREFIX.slice(1)}${encoded}`
   return url.toString()
 }
 
 export function siteUrl() {
-  if (typeof window === "undefined") return ""
-  return `${window.location.origin}${window.location.pathname}`
+  return SCHOOL_SITE_URL
 }
 
 export function isLocalPreview() {

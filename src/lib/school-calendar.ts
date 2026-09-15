@@ -7,6 +7,7 @@ export const SCHOOL_DAYS_TOTAL = 191
 export const SCHOOL_YEAR_START = "2026-09-01"
 export const SCHOOL_YEAR_END = "2027-08-31"
 export const SCHOOL_PDF_HREF = "/mkpc-calendar-2026-2027.pdf"
+export const SCHOOL_SITE_URL = "https://2027-work-planner.vercel.app"
 
 export const SCHOOL_KINDS = [
   "holiday",
