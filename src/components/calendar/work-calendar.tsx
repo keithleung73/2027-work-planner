@@ -157,7 +157,7 @@ export function WorkCalendar() {
             {SCHOOL_YEAR_LABEL}校曆
           </h1>
           <p className="mt-2 max-w-xl text-sm leading-6 text-muted-foreground">
-            依{SCHOOL_HANDBOOK_CODE}標示假期、考試、交流團與活動。正式網址給所有裝置用；官方校曆更新後重新整理即同步。點日期可對照校務並寫下自己的工作。
+            依{SCHOOL_HANDBOOK_CODE}標示假期、考試、交流團與活動。正式網址給所有裝置用；官方校曆更新後重新整理即同步。個人會議／備註可在「其他裝置」設定同步碼，之後各裝置會自動更新。
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-2">
@@ -172,7 +172,7 @@ export function WorkCalendar() {
           </a>
           <Button type="button" variant="outline" onClick={() => setDevicesOpen(true)}>
             <Smartphone data-icon="inline-start" />
-            其他裝置
+            {schedule.cloud.status === "on" ? "已同步" : "其他裝置"}
           </Button>
           <Button type="button" variant="outline" onClick={goToday} disabled={!todayInRange}>
             <CalendarDays data-icon="inline-start" />
@@ -380,6 +380,10 @@ export function WorkCalendar() {
         open={devicesOpen}
         onOpenChange={setDevicesOpen}
         items={schedule.items}
+        cloud={schedule.cloud}
+        onEnableCloud={schedule.enableCloud}
+        onDisableCloud={schedule.disableCloud}
+        onGenerateCode={schedule.generateSyncCode}
       />
     </div>
   )
