@@ -86,7 +86,10 @@ export function Sidebar({
                               {SCHOOL_KIND_META[event.kind].label}
                             </Badge>
                           </span>
-                          <span className="truncate text-sm font-medium">{event.title}</span>
+                          <span className="text-sm font-medium">{event.title}</span>
+                          {event.detail ? (
+                            <span className="text-xs leading-5 text-muted-foreground">{event.detail}</span>
+                          ) : null}
                         </span>
                       </Button>
                     </li>
@@ -127,7 +130,10 @@ export function Sidebar({
                               {SCHOOL_KIND_META[event.kind].label}
                             </Badge>
                           </span>
-                          <span className="truncate text-sm font-medium">{event.title}</span>
+                          <span className="text-sm font-medium">{event.title}</span>
+                          {event.detail ? (
+                            <span className="text-xs leading-5 text-muted-foreground">{event.detail}</span>
+                          ) : null}
                         </span>
                       </Button>
                     </li>

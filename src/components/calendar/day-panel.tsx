@@ -8,6 +8,7 @@ import { CATEGORIES, type WorkItem } from "@/lib/types"
 import {
   dayMark,
   eventsOnDate,
+  formatEventRange,
   SCHOOL_KIND_META,
   schoolWeekNumber,
 } from "@/lib/school-calendar"
@@ -99,6 +100,12 @@ export function DayPanel({ date, items, onClose, onSave, onDelete }: DayPanelPro
                           </Badge>
                         </div>
                         <h3 className="mt-2 font-medium">{event.title}</h3>
+                        {event.detail ? (
+                          <p className="mt-1 text-sm leading-6 text-muted-foreground">{event.detail}</p>
+                        ) : null}
+                        {event.start !== event.end ? (
+                          <p className="mt-1 text-xs text-muted-foreground">{formatEventRange(event)}</p>
+                        ) : null}
                       </article>
                     ))}
                   </div>
