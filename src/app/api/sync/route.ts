@@ -51,6 +51,13 @@ export async function PUT(request: Request) {
     if (message === "not_configured") {
       return errorResponse("尚未設定雲端同步儲存。", 503, "not_configured")
     }
+    if (message === "gist_scope" || message === "gist_unauthorized") {
+      return errorResponse(
+        "GitHub Token 沒有 gist 權限或已失效。請到 github.com/settings/tokens 新增 classic token，勾選 gist，然後在 Vercel 更新 SYNC_TOKEN 並 Redeploy。",
+        403,
+        "gist_scope",
+      )
+    }
     console.error(error)
     return errorResponse("寫入雲端資料失敗。", 502)
   }

@@ -21,7 +21,13 @@ function kvConfig() {
 }
 
 function gistToken() {
-  return process.env.SYNC_TOKEN || process.env.GITHUB_TOKEN || ""
+  return (process.env.SYNC_TOKEN || process.env.GITHUB_TOKEN || "").trim()
+}
+
+function gistError(action: string, status: number) {
+  if (status === 401) return new Error("gist_unauthorized")
+  if (status === 403 || status === 404) return new Error("gist_scope")
+  return new Error(`${action}_${status}`)
 }
 
 function canUseFileStore() {
@@ -69,7 +75,7 @@ async function findGistId(token: string) {
     cache: "no-store",
   })
   if (!response.ok) {
-    throw new Error(`gist_list_${response.status}`)
+    throw gistError("gist_list", response.status)
   }
   const gists = (await response.json()) as Array<{ id?: string; description?: string }>
   return gists.find((gist) => gist.description === GIST_DESCRIPTION)?.id ?? null
@@ -82,7 +88,7 @@ async function readGistEnvelope(token: string, id: string) {
     headers: githubHeaders(token),
     cache: "no-store",
   })
-  if (!response.ok) throw new Error(`gist_get_${response.status}`)
+  if (!response.ok) throw gistError("gist_get", response.status)
   const gist = (await response.json()) as {
     files?: Record<string, { content?: string } | undefined>
   }
@@ -110,15 +116,15 @@ async function writeGistEnvelope(token: string, id: string, envelope: SyncEnvelo
         },
       }),
     })
-    if (!response.ok) throw new Error(`gist_create_${response.status}`)
+    if (!response.ok) throw gistError("gist_create", response.status)
     return
   }
   const response = await fetch(`https://api.github.com/gists/${gistId}`, {
     method: "PATCH",
-        headers: { ...githubHeaders(token), "Content-Type": "application/json" },
+    headers: { ...githubHeaders(token), "Content-Type": "application/json" },
     body: JSON.stringify({ files: file }),
   })
-  if (!response.ok) throw new Error(`gist_patch_${response.status}`)
+  if (!response.ok) throw gistError("gist_patch", response.status)
 }
 
 async function readKv(id: string) {

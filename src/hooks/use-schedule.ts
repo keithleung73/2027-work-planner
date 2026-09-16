@@ -44,9 +44,13 @@ const emptyState: ScheduleState = {
 const NOT_CONFIGURED =
   "正式網站尚未開啟雲端同步儲存。請在 Vercel 專案新增 SYNC_TOKEN（GitHub token，勾選 gist），或建立 KV 資料庫後重新部署。"
 
+const GIST_SCOPE =
+  "GitHub Token 沒有 gist 權限或已失效。請到 github.com/settings/tokens 新增 classic token，勾選 gist，然後在 Vercel 更新 SYNC_TOKEN 並 Redeploy。"
+
 function cloudMessage(error: unknown) {
   const text = error instanceof Error ? error.message : ""
   if (text === "not_configured") return NOT_CONFIGURED
+  if (text === "gist_scope" || text.includes("gist 權限")) return GIST_SCOPE
   return text || "雲端同步失敗。"
 }
 
