@@ -259,6 +259,15 @@ export const SCHOOL_EVENTS: SchoolEvent[] = [
     detail: "學生交流團",
   },
   { id: "study-tour-dec", title: "聯校遊學團（待定）", kind: "foundation", start: "2026-12-14", end: "2026-12-14" },
+  {
+    id: "ial-hkeaa-entry",
+    title: "IAL 正常報名截止（HKEAA）",
+    kind: "other",
+    start: "2026-12-18",
+    end: "2026-12-18",
+    detail:
+      "Pearson Edexcel IAL May/June 2027｜截止下午5:30｜網上報名 https://online.hkeaa.edu.hk/Portal/home.xhtml",
+  },
   { id: "christmas-show", title: "聖誕才藝表演", kind: "learning", start: "2026-12-22", end: "2026-12-22" },
   { id: "xmas-ny", title: "聖誕節及新年假期", kind: "holiday", start: "2026-12-23", end: "2027-01-02" },
   { id: "new-year", title: "元旦", kind: "holiday", start: "2027-01-01", end: "2027-01-01" },
@@ -268,12 +277,38 @@ export const SCHOOL_EVENTS: SchoolEvent[] = [
   { id: "admin-2027-01-14", title: "聯校行政會", kind: "foundation", start: "2027-01-14", end: "2027-01-14" },
   { id: "staff-2027-01-15", title: "校務會議", kind: "other", start: "2027-01-15", end: "2027-01-15" },
   {
+    id: "ial-hkeaa-modified-paper",
+    title: "IAL 特別試卷申請截止（HKEAA）",
+    kind: "other",
+    start: "2027-01-15",
+    end: "2027-01-15",
+    detail: "Pearson Edexcel IAL May/June 2027｜Modified Paper 申請截止下午5:30",
+  },
+  {
     id: "tour-bett",
     title: "英國 BETT Show",
     kind: "tour",
     start: "2027-01-17",
     end: "2027-01-27",
     detail: "學生交流團｜帶隊：伍卓鍵、盧澤境",
+  },
+  {
+    id: "ial-hkeaa-late-entry",
+    title: "IAL 遲交報名／加科改科／特別安排申請截止（HKEAA）",
+    kind: "other",
+    start: "2027-01-22",
+    end: "2027-01-22",
+    detail:
+      "Pearson Edexcel IAL May/June 2027｜遲交報名（每宗申請另收附加費，網上報名 https://online.hkeaa.edu.hk/Portal/home.xhtml）、加科／改科（每宗申請另收附加費，請以電郵向考評局索取申請連結），以及其他特別考試安排（如加時）｜截止下午5:30",
+  },
+  {
+    id: "ial-hkeaa-checklist",
+    title: "IAL 考生資料核對表發出（約在1月下旬）",
+    kind: "other",
+    start: "2027-01-26",
+    end: "2027-01-31",
+    detail:
+      "Pearson Edexcel IAL May/June 2027｜日期為大約｜自修生經考評局網上平台（HKEAA Online Portal）領取，學校考生經所屬學校",
   },
   { id: "high-table", title: "高桌晚宴", kind: "other", start: "2027-01-29", end: "2027-01-29" },
   { id: "cny", title: "農曆新年假期", kind: "holiday", start: "2027-02-04", end: "2027-02-16" },
@@ -322,6 +357,15 @@ export const SCHOOL_EVENTS: SchoolEvent[] = [
   { id: "ching-ming", title: "清明節", kind: "holiday", start: "2027-04-05", end: "2027-04-05" },
   { id: "test-2", title: "第二次統測（S.4–S.5）", kind: "exam", start: "2027-04-06", end: "2027-04-09" },
   { id: "admin-2027-04-10", title: "聯校行政會", kind: "foundation", start: "2027-04-10", end: "2027-04-10" },
+  {
+    id: "ial-hkeaa-admission-form",
+    title: "IAL 筆試准考證發出（約4月中）",
+    kind: "other",
+    start: "2027-04-13",
+    end: "2027-04-17",
+    detail:
+      "Pearson Edexcel IAL May/June 2027｜日期為大約｜自修生經考評局網上平台（HKEAA Online Portal）領取，學校考生經所屬學校",
+  },
   { id: "s1-brief-2027-04-17", title: "升中簡介會（暫定）", kind: "other", start: "2027-04-17", end: "2027-04-17" },
   {
     id: "ial-term-break",
@@ -334,6 +378,14 @@ export const SCHOOL_EVENTS: SchoolEvent[] = [
   { id: "tin-shui-wai", title: "天水圍的孩子面試日", kind: "foundation", start: "2027-04-24", end: "2027-04-24" },
   { id: "labour-day", title: "勞動節", kind: "holiday", start: "2027-05-01", end: "2027-05-01" },
   { id: "dlw-may", title: "Deep Learning Week（環球自主學習週）", kind: "learning", start: "2027-05-03", end: "2027-05-07" },
+  {
+    id: "ial-hkeaa-written",
+    title: "IAL 筆試期（May/June 2027）",
+    kind: "exam",
+    start: "2027-05-04",
+    end: "2027-06-10",
+    detail: "Pearson Edexcel IAL May/June 2027 筆試期",
+  },
   { id: "staff-2027-05-07", title: "校務會議", kind: "other", start: "2027-05-07", end: "2027-05-07" },
   {
     id: "innopower-forum-3",
@@ -371,6 +423,30 @@ export const SCHOOL_EVENTS: SchoolEvent[] = [
   { id: "next-year-reg", title: "下學年註冊", kind: "learning", start: "2027-07-12", end: "2027-07-12" },
   { id: "dse-results", title: "中六 DSE 放榜", kind: "other", start: "2027-07-14", end: "2027-07-14" },
   { id: "summer", title: "暑假", kind: "holiday", start: "2027-07-15", end: "2027-08-31" },
+  {
+    id: "ial-hkeaa-results",
+    title: "IAL 成績公布（HKEAA）",
+    kind: "other",
+    start: "2027-08-12",
+    end: "2027-08-12",
+    detail: "Pearson Edexcel IAL May/June 2027 成績公布",
+  },
+  {
+    id: "ial-hkeaa-romm",
+    title: "IAL 成績覆核及調整服務（RoMM，約8月中至9月中）",
+    kind: "other",
+    start: "2027-08-16",
+    end: "2027-09-15",
+    detail: "Pearson Edexcel IAL May/June 2027｜Reviews of Marking and Moderation (RoMM)｜日期為大約",
+  },
+  {
+    id: "ial-hkeaa-certificate",
+    title: "IAL 考試證書發出（11月）",
+    kind: "other",
+    start: "2027-11-01",
+    end: "2027-11-30",
+    detail: "Pearson Edexcel IAL May/June 2027｜月份為大約",
+  },
 ]
 
 export const TENTATIVE_EVENTS: { month: string; title: string; kind: SchoolKind }[] = [
