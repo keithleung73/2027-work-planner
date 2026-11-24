@@ -222,6 +222,14 @@ export const SCHOOL_EVENTS: SchoolEvent[] = [
   },
   { id: "athletics-nov", title: "校際田徑運動會", kind: "other", start: "2026-11-30", end: "2026-12-04" },
   {
+    id: "ial-registration",
+    title: "IAL registration",
+    kind: "other",
+    start: "2026-11-30",
+    end: "2026-11-30",
+    detail: "IAL 註冊",
+  },
+  {
     id: "tour-taiwan-reading",
     title: "台灣閱讀及歷史文化交流團",
     kind: "tour",
